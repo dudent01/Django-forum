@@ -4,17 +4,6 @@
 
 {% block title %}Post a reply{% endblock %}
 
-{% block stylesheet %}
-  <link rel="stylesheet" href="{% static 'css/simplemde.min.css' %}">
-{% endblock %}
-
-{% block javascript %}
-  <script src="{% static 'js/simplemde.min.js' %}"></script>
-  <script>
-    var simplemde = new SimpleMDE();
-  </script>
-{% endblock %}
-
 {% block breadcrumb %}
   <li class="breadcrumb-item"><a href="{% url 'home' %}">Boards</a></li>
   <li class="breadcrumb-item"><a href="{% url 'board_topics' topic.board.pk %}">{{ topic.board.name }}</a></li>
@@ -24,7 +13,7 @@
 
 {% block content %}
 
-  <form method="post" class="mb-4" novalidate>
+  <form method="post" class="mb-4" nonvalidate>
     {% csrf_token %}
     {% include 'includes/form.html' %}
     <button type="submit" class="btn btn-success">Post a reply</button>
@@ -35,6 +24,7 @@
         {% if forloop.first %}
             <div class="card-header text-white bg-dark py-2 px-3">{{ topic.subject }}</div>
         {% endif %}
+      {% if forloop.first or post in topic.get_last_ten_posts %}
       <div class="card-body p-3">
         <div class="row mb-3">
           <div class="col-6">
@@ -47,6 +37,8 @@
         {{ post.get_message_as_markdown }}
       </div>
     </div>
+
+  {% endif %}
   {% endfor %}
 
 {% endblock %}
